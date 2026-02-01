@@ -13,7 +13,7 @@ st.write(
     "5-day return and expected price range based on historical patterns."
 )
 
-df = pd.read_csv(r"C:\Users\Parth Mudgal\OneDrive\Documents\Finalytics\Finalytics\amzn_features_final.csv")
+df = pd.read_csv("amzn_features_final.csv")
 
 
 df["Date"] = pd.to_datetime(df["Date"])
