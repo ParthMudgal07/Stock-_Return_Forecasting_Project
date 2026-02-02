@@ -18,7 +18,7 @@ st.markdown(
     """
     <style>
         body {
-            background-color: #f9fafb;
+            background-color: #f8fafc;
         }
         .block-container {
             padding-top: 2rem;
@@ -30,7 +30,7 @@ st.markdown(
             color: #111827;
         }
         p {
-            color: #374151;
+            color: #334155;
         }
         .card {
             background: white;
