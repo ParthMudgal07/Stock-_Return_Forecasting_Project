@@ -27,10 +27,15 @@ st.markdown(
         }
         h1, h2, h3 {
             font-weight: 600;
-            color: #111827;
+            color: #0f172a;
         }
         p {
             color: #334155;
+        }
+        .subtitle {
+            color: #475569;
+            font-size: 1rem;
+            margin-bottom: 2rem;
         }
         .card {
             background: white;
@@ -46,9 +51,18 @@ st.markdown(
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             text-align: center;
         }
+        .metric-card h3 {
+            color: #020617;
+            margin-bottom: 0.25rem;
+        }
+
+        .metric-card p {
+            color: #475569;
+            font-size: 0.9rem;
+        }
         .footer {
             font-size: 0.8rem;
-            color: #6b7280;
+            color: #64748b;
             text-align: center;
             margin-top: 2rem;
         }
