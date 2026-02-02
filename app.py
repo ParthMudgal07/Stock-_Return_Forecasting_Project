@@ -6,27 +6,57 @@ import matplotlib.pyplot as plt
 # Page config
 # ---------------------------
 st.set_page_config(
-    page_title="Amazon Stock Return Forecast",
+    page_title="Amazon Return Forecast",
     page_icon="",
     layout="centered",
 )
 
 # ---------------------------
-# Global style tweaks
+# Custom CSS (Premium Minimal Theme)
 # ---------------------------
 st.markdown(
     """
     <style>
+        body {
+            background-color: #f9fafb;
+        }
         .block-container {
             padding-top: 2rem;
             padding-bottom: 2rem;
+            max-width: 900px;
         }
         h1, h2, h3 {
             font-weight: 600;
+            color: #111827;
         }
-        .metric-label {
-            font-size: 0.9rem;
+        p {
+            color: #374151;
+        }
+        .card {
+            background: white;
+            border-radius: 14px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            margin-bottom: 1.5rem;
+        }
+        .metric-card {
+            background: white;
+            border-radius: 14px;
+            padding: 1rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+        .footer {
+            font-size: 0.8rem;
             color: #6b7280;
+            text-align: center;
+            margin-top: 2rem;
+        }
+        hr {
+            border: none;
+            height: 1px;
+            background-color: #e5e7eb;
+            margin-top: 2rem;
         }
     </style>
     """,
@@ -34,9 +64,9 @@ st.markdown(
 )
 
 # ---------------------------
-# Title
+# Header
 # ---------------------------
-st.markdown("## Amazon ")
+st.markdown("## Amazon")
 st.markdown(
     "Probabilistic short-term return forecast using quantile regression."
 )
@@ -49,8 +79,7 @@ df["Date"] = pd.to_datetime(df["Date"])
 df = df.sort_values("Date")
 
 # ---------------------------
-# Final ML output (static demo values)
-# Replace with your actual final_output values
+# Final ML output (demo values)
 # ---------------------------
 final_output = {
     "median_return_%": 0.84,
@@ -59,7 +88,7 @@ final_output = {
 }
 
 # ---------------------------
-# Automated interpretation
+# Automated interpretation logic
 # ---------------------------
 def generate_automated_response(
     stock,
@@ -86,104 +115,119 @@ def generate_automated_response(
         uncertainty = "low"
 
     return (
-        f"Over the {horizon}, {stock} is expected to show a **{bias} bias**, "
-        f"with a median projected return of **{median_return_pct:.2f}%**. "
-        f"The expected price range lies between **{lower_price:.2f}** and "
-        f"**{upper_price:.2f}**, indicating **{uncertainty} uncertainty** "
-        f"in short-term price movements."
+        f"Over the {horizon}, {stock} is expected to show a "
+        f"**{bias} bias**, with a median projected return of "
+        f"**{median_return_pct:.2f}%**. The expected price range lies "
+        f"between **{lower_price:.2f}** and **{upper_price:.2f}**, "
+        f"indicating **{uncertainty} uncertainty** in short-term movements."
     )
 
 # ---------------------------
-# Summary card
+# Market Summary Card
 # ---------------------------
-with st.container():
-    st.markdown("### Market Summary")
-    st.markdown(
-        generate_automated_response(
-            stock="Amazon",
-            horizon="next 5 trading days",
-            median_return_pct=final_output["median_return_%"],
-            lower_price=final_output["lower_price"],
-            upper_price=final_output["upper_price"],
-        )
-    )
+st.markdown(
+    f"""
+    <div class="card">
+        <h3>Market Summary</h3>
+        <p>{generate_automated_response(
+            "Amazon (AMZN)",
+            "next 5 trading days",
+            final_output["median_return_%"],
+            final_output["lower_price"],
+            final_output["upper_price"],
+        )}</p>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 
 # ---------------------------
-# Metrics row
+# Metrics
 # ---------------------------
 st.markdown("### Forecast Snapshot")
 
 c1, c2, c3 = st.columns(3)
 
-c1.metric(
-    label="Median Return",
-    value=f"{final_output['median_return_%']:.2f}%",
-)
+with c1:
+    st.markdown(
+        f"""
+        <div class="metric-card">
+            <h3>{final_output['median_return_%']:.2f}%</h3>
+            <p>Median Return</p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
-c2.metric(
-    label="Lower Price Bound",
-    value=f"${final_output['lower_price']:.2f}",
-)
+with c2:
+    st.markdown(
+        f"""
+        <div class="metric-card">
+            <h3>${final_output['lower_price']:.2f}</h3>
+            <p>Lower Bound</p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
-c3.metric(
-    label="Upper Price Bound",
-    value=f"${final_output['upper_price']:.2f}",
-)
+with c3:
+    st.markdown(
+        f"""
+        <div class="metric-card">
+            <h3>${final_output['upper_price']:.2f}</h3>
+            <p>Upper Bound</p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
 # ---------------------------
-# Price trend plot
+# Price Trend Plot
 # ---------------------------
 st.markdown("### Recent Price Trend")
-
-fig, ax = plt.subplots(figsize=(6, 3))
-ax.plot(df["Date"], df["Close"], linewidth=2)
-ax.set_xlabel("")
-ax.set_ylabel("Price")
-ax.grid(alpha=0.2)
-
-st.pyplot(fig, use_container_width=True)
-
-# ---------------------------
-# Volatility plot
-# ---------------------------
-st.markdown("### Volatility Context (20-day)")
-
-fig, ax = plt.subplots(figsize=(6, 3))
-ax.plot(df["Date"], df["vol_20d"], linewidth=2)
-ax.set_xlabel("")
-ax.set_ylabel("Volatility")
-ax.grid(alpha=0.2)
-
-st.pyplot(fig, use_container_width=True)
+with st.container():
+    fig, ax = plt.subplots(figsize=(6, 3))
+    ax.plot(df["Date"], df["Close"], linewidth=2)
+    ax.set_xlabel("")
+    ax.set_ylabel("Price")
+    ax.grid(alpha=0.2)
+    st.pyplot(fig, use_container_width=True)
 
 # ---------------------------
-# Return distribution plot
+# Volatility Plot
+# ---------------------------
+st.markdown("### Volatility (20-day)")
+with st.container():
+    fig, ax = plt.subplots(figsize=(6, 3))
+    ax.plot(df["Date"], df["vol_20d"], linewidth=2)
+    ax.set_xlabel("")
+    ax.set_ylabel("Volatility")
+    ax.grid(alpha=0.2)
+    st.pyplot(fig, use_container_width=True)
+
+# ---------------------------
+# Return Distribution
 # ---------------------------
 st.markdown("### 5-Day Return Distribution")
-
-fig, ax = plt.subplots(figsize=(6, 3))
-ax.hist(
-    df["future_5d_return"],
-    bins=50,
-    alpha=0.75,
-)
-ax.axvline(0, linestyle="--", linewidth=1)
-ax.set_xlabel("5-Day Return")
-ax.set_ylabel("Frequency")
-ax.grid(alpha=0.2)
-
-st.pyplot(fig, use_container_width=True)
+with st.container():
+    fig, ax = plt.subplots(figsize=(6, 3))
+    ax.hist(df["future_5d_return"], bins=50, alpha=0.75)
+    ax.axvline(0, linestyle="--", linewidth=1)
+    ax.set_xlabel("5-Day Return")
+    ax.set_ylabel("Frequency")
+    ax.grid(alpha=0.2)
+    st.pyplot(fig, use_container_width=True)
 
 # ---------------------------
-# Footer note
+# Footer
 # ---------------------------
 st.markdown(
     """
     <hr>
-    <small>
-    Forecasts are probabilistic and based on historical price behavior.
-    This dashboard is for educational purposes only.
-    </small>
+    <div class="footer">
+        Forecasts are probabilistic and based on historical price behavior.
+        This dashboard is for educational purposes only.
+    </div>
     """,
     unsafe_allow_html=True,
 )
