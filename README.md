@@ -1,143 +1,157 @@
-Probabilistic Stock Return Forecasting (Amazon)
+**Stock Return Forecasting Dashboard**
+<img width="1110" height="724" alt="image" src="https://github.com/user-attachments/assets/c84aaae5-0662-4fe7-b1f9-46d6128c74bd" />
+Dasboard Link: https://stock-return-forecasting-project.streamlit.app/
+**Overview**
 
-Overview
+This project builds a probabilistic short term stock return forecasting system for Amazon (AMZN) using historical market data.
 
-This project builds a probabilistic stock return forecasting system for Amazon (AMZN) using historical price data.
-The system estimates:
+The model estimates:
 
-Median expected return (%) over the next 5 trading days
+The median expected return (%)
 
-A price range capturing downside and upside uncertainty using quantile regression
+A price range representing downside and upside risk using quantile regression
 
-The final outputs are presented through an interactive Streamlit dashboard along with a market summary.
+The final results are presented through an interactive Streamlit dashboard with a clean, minimal UI and a market summary.
 
-Problem Statement
+Motivation
 
-Traditional stock price prediction models often aim to forecast a single future price, which can be misleading due to market uncertainty and volatility.
+Stock prices are inherently uncertain. Point predictions often hide risk and give a false sense of precision.
 
-This project addresses that limitation by:
+This project focuses on:
 
-Modeling return distributions instead of point estimates
+Modeling uncertainty explicitly
 
-Quantifying uncertainty using quantile regression
+Predicting return distributions
 
-Presenting outputs in a risk aware and interpretable format
+Presenting results in a risk aware and interpretable manner
 
 Data Source
 
-Historical OHLCV data for Amazon (AMZN)
+Amazon (AMZN) historical OHLCV data
 
-Data obtained from Yahoo Finance
+Sourced from Yahoo Finance
 
-Time period: Multi-year historical data (used for training and testing)
+Multi year daily price history
 
-Methodology
-1. Exploratory Data Analysis 
+Project Structure
 
-Price trends and return distributions
+├── EDA.ipynb
+│   └── Exploratory data analysis:
+│       - Price trends
+│       - Return distributions
+│       - Volatility analysis
+│       - Autocorrelation analysis
+│
+├── Feature_engineering.ipynb
+│   └── Feature creation:
+│       - Momentum features
+│       - Volatility features
+│       - Volume-based features
+│       - Lagged variables
+│       - Technical indicators
+│
+├── Model_Training.ipynb
+│   └── Quantile regression modeling:
+│       - q10 (downside risk)
+│       - q50 (median return)
+│       - q90 (upside potential)
+│       - Calibration & coverage evaluation
+│
+├── app.py
+│   └── Streamlit dashboard:
+│       - Automated market summary
+│       - Forecast metrics
+│       - Visual analytics
+│
+├── amzn_data.csv
+│   └── Raw historical price data
+│
+├── amzn_features_final.csv
+│   └── Feature-engineered dataset used for modeling
+│
+├── requirements.txt
+│   └── Project dependencies
+│
+└── README.md
 
-Volatility analysis
+**Methodology**
+Exploratory Data Analysis (EDA)
 
-Autocorrelation analysis
+Examined price trends and regime behavior
 
-Identification of useful predictive signals
+Analyzed daily and multi-day return distributions
 
-2. Feature Engineering
+Studied volatility clustering and autocorrelation
 
-Key features derived from OHLCV data:
+Identified signals useful for short-term forecasting
 
-Momentum features (5, 10, 20-day returns)
+**Feature Engineering**
 
-Volatility features (rolling standard deviation)
+Derived predictive features from raw OHLCV data:
 
-Volume based features
+Momentum (5, 10, 20-day returns)
+
+Rolling volatility measures
+
+Volume change and ratios
 
 Lagged features
 
-Technical indicators 
+Technical indicators (e.g., RSI)
 
-Target variable:
+Target Variable:
 
 Future 5-day return
 
-3. Modeling Approach
+**Modeling Approach**
 
 Quantile Regression using Gradient Boosting
 
 Separate models trained for:
 
-10th percentile (q10)
+q10 → downside risk
 
-50th percentile (q50 – median)
+q50 → median expected return
 
-90th percentile (q90)
+q90 → upside potential
 
-This allows the model to estimate the full conditional distribution of future returns.
+This allows the model to estimate a conditional return distribution rather than a single value.
 
-4. Model Evaluation
+**Model Evaluation**
 
-Quantile coverage analysis to assess calibration
+Evaluated quantile coverage on the test set
 
-Validation that:
+Verified that predicted quantiles are well-calibrated
 
-~10% of actual returns fall below q10
+Ensured probabilistic outputs are statistically meaningful
 
-~50% fall below q50
-
-~90% fall below q90
-
-This ensures the probabilistic forecasts are well calibrated.
-
-5. Final Model Output
+Final Model Output
 
 For the most recent observation:
 
 Median expected return (%)
 
-Expected price range, computed as:
+Expected price range
 
 Lower bound → q10
 
 Upper bound → q90
 
-Interpretation Layer
+These outputs are probabilistic, not deterministic.
 
-The project uses a deterministic interpretation engine that converts numerical model outputs into a clear market summary.
+**Streamlit Dashboard**
 
-Streamlit Dashboard
+The Streamlit app provides:
 
-The dashboard presents:
-
-Market summary
+Automated market summary
 
 Median return and price range
 
-Recent price trend
+Recent price trend visualization
 
 Volatility context
 
-Distribution of historical 5-day returns
-
-Run the Dashboard
-streamlit run app.py
-
-Assumptions & Limitations
-
-Model relies solely on historical price and volume data
-
-No fundamental, macroeconomic, or news based inputs
-
-Performance may degrade during extreme market events
-
-Outputs are not investment advice
-
-Key Takeaways
-
-Predicting ranges and probabilities is more informative than predicting exact prices
-
-Quantile regression provides a natural framework for uncertainty modeling
-
-Separating modeling from presentation improves system design and clarity
+Historical return distribution
 
 Technologies Used
 
@@ -151,16 +165,6 @@ Matplotlib
 
 Streamlit
 
-Future Enhancements
-
-Extend to multiple stocks
-
-Add regime detection
-
-Incorporate additional data sources
-
-Enable dynamic stock selection in the dashboard
-
 Disclaimer
 
-This project is for educational purposes only and does not constitute financial or investment advice.
+This project is for educational and demonstrative purposes only and does not constitute financial or investment advice.
