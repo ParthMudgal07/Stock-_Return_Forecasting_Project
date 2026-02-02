@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 # Page config
 # ---------------------------
 st.set_page_config(
-    page_title="AMZN Return Forecast",
-    page_icon="📈",
+    page_title="Amazon Stock Return Forecast",
+    page_icon="",
     layout="centered",
 )
 
@@ -36,7 +36,7 @@ st.markdown(
 # ---------------------------
 # Title
 # ---------------------------
-st.markdown("## 📈 Amazon (AMZN)")
+st.markdown("## Amazon ")
 st.markdown(
     "Probabilistic short-term return forecast using quantile regression."
 )
@@ -97,10 +97,10 @@ def generate_automated_response(
 # Summary card
 # ---------------------------
 with st.container():
-    st.markdown("### 🧠 Market Summary")
+    st.markdown("### Market Summary")
     st.markdown(
         generate_automated_response(
-            stock="Amazon (AMZN)",
+            stock="Amazon",
             horizon="next 5 trading days",
             median_return_pct=final_output["median_return_%"],
             lower_price=final_output["lower_price"],
@@ -111,7 +111,7 @@ with st.container():
 # ---------------------------
 # Metrics row
 # ---------------------------
-st.markdown("### 📊 Forecast Snapshot")
+st.markdown("### Forecast Snapshot")
 
 c1, c2, c3 = st.columns(3)
 
@@ -133,7 +133,7 @@ c3.metric(
 # ---------------------------
 # Price trend plot
 # ---------------------------
-st.markdown("### 📈 Recent Price Trend")
+st.markdown("### Recent Price Trend")
 
 fig, ax = plt.subplots(figsize=(6, 3))
 ax.plot(df["Date"], df["Close"], linewidth=2)
@@ -146,7 +146,7 @@ st.pyplot(fig, use_container_width=True)
 # ---------------------------
 # Volatility plot
 # ---------------------------
-st.markdown("### 📉 Volatility Context (20-day)")
+st.markdown("### Volatility Context (20-day)")
 
 fig, ax = plt.subplots(figsize=(6, 3))
 ax.plot(df["Date"], df["vol_20d"], linewidth=2)
@@ -159,7 +159,7 @@ st.pyplot(fig, use_container_width=True)
 # ---------------------------
 # Return distribution plot
 # ---------------------------
-st.markdown("### 📊 5-Day Return Distribution")
+st.markdown("### 5-Day Return Distribution")
 
 fig, ax = plt.subplots(figsize=(6, 3))
 ax.hist(
